@@ -44,13 +44,14 @@ def predict(input_data: dict):
     """
 
     # Ensure feature order matches training
-    x = np.array([input_data[f] for f in FEATURES]).reshape(1, -1)
+    x = np.array([input_data[f] for f in FEATURES], dtype=float).reshape(1, -1)
 
-    probability = model.predict_proba(x)[0][1]
-    approved = probability >= 0.60
+    # Model inference
+    probability = float(model.predict_proba(x)[0][1])  
+    approved = bool(probability >= 0.60)               
 
     return {
         "approved": approved,
-        "probability": round(float(probability), 3),
+        "probability": round(probability, 3),
         "risk_bucket": risk_bucket(probability)
     }
